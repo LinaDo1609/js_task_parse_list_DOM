@@ -1,29 +1,30 @@
 'use strict';
 
-const persons = document.body.querySelectorAll('li');
+const list = document.body.querySelectorAll('li');
 
-function sortSalary() {
-  let previous = persons[0]
-    .getAttribute('data-salary')
-    .replace((/[,$]/g, ''), 10);
+function sortList(items) {
+  const sorted = Array.from(list).sort((a, b) => {
+    return (
+      parseInt(b.dataset.salary.replace(/[,$]/g, '')) -
+      parseInt(a.dataset.salary.replace(/[,$]/g, ''))
+    );
+  });
 
-  for (let i = 1; i < persons.length; i++) {
-    const current = persons[i]
-      .getAttribute('data-salary')
-      .replace((/[,$]/g, ''), 10);
+  const ul = document.querySelector('ul');
 
-    if (current > previous) {
-      persons[i - 1].before(persons[i]);
-    }
+  ul.innerHTML = '';
 
-    previous = current;
-  }
+  sorted.forEach((item) => {
+    ul.appendChild(item);
+  });
 }
 
-function getEmployee() {
+sortList(list);
+
+function getEmployees(employees) {
   const employee = [];
 
-  for (const person of persons) {
+  for (const person of employees) {
     const obj = {};
 
     obj.name = person.textContent.trim();
@@ -33,7 +34,7 @@ function getEmployee() {
       person.getAttribute('data-salary').replace(/[,$]/g, ''),
       10,
     );
-    obj.age = parseInt(person.getAttribute('data-age'), 10);
+    obj.age = parseInt(person.getAttribute('data-age'));
 
     employee.push(obj);
   }
@@ -41,5 +42,4 @@ function getEmployee() {
   return employee;
 }
 
-sortSalary();
-getEmployee();
+getEmployees(list);
